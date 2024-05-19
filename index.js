@@ -1,18 +1,19 @@
-// const express = require("express");
- const mongoose = require("mongoose");
+const express = require("express");
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("./models/Users");
+const app = express();
+app.use(express.json());
 
-
-// // MongoDB connection
-const password = encodeURIComponent("079078077Qw#"); // Encoding the password
-const connectionString = `mongodb+srv://h1995malek:${password}@electiondb.p2vcv5q.mongodb.net/?retryWrites=true&w=majority`;
+const password = encodeURIComponent("079078077Qw#");
+const connectionString = `mongodb+srv://h1995malek:${password}@electiondb.p2vcv5q.mongodb.net/?retryWrites=true`;
 
 mongoose
   .connect(connectionString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    // Remove useCreateIndex option
   })
   .then(() => {
     console.log("Connected to MongoDB");
@@ -21,15 +22,53 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 
+// Define routes
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
 
+app.get("/api/value", (req, res) => {
+  res.json({ value: "Test value" });
+});
 
-//   app.get("/api", (req, res) => {
-//     // You can replace 'Hello, world!' with any value you want to return
-//     res.json({ value: "Hello, world!" });
-//     console.log("Hello, world:");
-//   });
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
+    // Retrieve the user with the provided email from the database
+    const user = await User.findOne({ email });
 
+    // If user does not exist, return an error response
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Compare the provided password with the hashed password stored in the database
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    // If passwords do not match, return an error response
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id }, "your_secret_key");
+
+    // Remove password field from user object
+    const { password: _, ...userData } = user.toObject();
+
+    // Return the token and user data as a response
+    res.status(200).json({ token, user: userData });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
 // // API endpoint to create a new user
 // // app.post("/users", async (req, res) => {
@@ -93,69 +132,3 @@ mongoose
 // //     res.status(500).json({ error: "Internal Server Error" });
 // //   }
 // // });
-
-// // API endpoint to retrieve a static value
-
-
-const express = require('express');
-const app = express();
-app.use(express.json());
-
-
-
-// Define a basic route
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
-
-// Define another route
-app.get('/api/value', (req, res) => {
-  res.json({ value: 'Test value' });
-});
-
-// Start the server
-
- const User = require("./models/Users");
-
-
-
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Retrieve the user with the provided email from the database
-    const user = await User.findOne({ email });
-
-    // If user does not exist, return an error response
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Compare the provided password with the hashed password stored in the database
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    // If passwords do not match, return an error response
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, "your_secret_key");
-
-    // Remove password field from user object
-    const { password: _, ...userData } = user.toObject();
-
-    // Return the token and user data as a response
-    res.status(200).json({ token, user: userData });
-  } catch (error) {
-    console.error("Error logging in:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// // Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
