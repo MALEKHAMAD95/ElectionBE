@@ -116,10 +116,6 @@ app.get('/api/value', (req, res) => {
 });
 
 // Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
 
 
 
@@ -158,9 +154,8 @@ app.post("/login", async (req, res) => {
 });
 
 // // Start the server
-// const port = process.env.PORT || 5000;
-// app.listen(port, () => {
-//   console.log(`Server running at http://localhost:${port}/`);
-// });
-
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
