@@ -108,6 +108,13 @@ app.post("/users", async (req, res) => {
 // const port = process.env.port || 3003;
 // app.listen(3003, () => console.log('The back end working in  port :', port));
 
+app.get('/api/value', (req, res) => {
+    // You can replace 'Hello, world!' with any value you want to return
+    res.json({ value: 'Hello, world!' });
+    console.log('Hello, world:' );
+});
+
+
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
