@@ -1,7 +1,7 @@
 // const express = require("express");
-// const mongoose = require("mongoose");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+ const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 // const User = require("./models/Users");
 
 // const app = express();
@@ -10,21 +10,21 @@
 // app.use(express.json());
 
 // // MongoDB connection
-// const password = encodeURIComponent("079078077Qw#"); // Encoding the password
-// const connectionString = `mongodb+srv://h1995malek:${password}@electiondb.p2vcv5q.mongodb.net/?retryWrites=true&w=majority`;
+const password = encodeURIComponent("079078077Qw#"); // Encoding the password
+const connectionString = `mongodb+srv://h1995malek:${password}@electiondb.p2vcv5q.mongodb.net/?retryWrites=true&w=majority`;
 
-// mongoose
-//   .connect(connectionString, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
-//   })
-//   .then(() => {
-//     console.log("Connected to MongoDB");
-//   })
-//   .catch((err) => {
-//     console.error("Error connecting to MongoDB:", err);
-//   });
+mongoose
+  .connect(connectionString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
 
 
 
