@@ -2,12 +2,7 @@
  const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-// const User = require("./models/Users");
 
-// const app = express();
-
-// // Middleware to parse JSON bodies
-// app.use(express.json());
 
 // // MongoDB connection
 const password = encodeURIComponent("079078077Qw#"); // Encoding the password
@@ -104,6 +99,9 @@ mongoose
 
 const express = require('express');
 const app = express();
+app.use(express.json());
+
+
 
 // Define a basic route
 app.get('/', (req, res) => {
@@ -116,6 +114,8 @@ app.get('/api/value', (req, res) => {
 });
 
 // Start the server
+
+ const User = require("./models/Users");
 
 
 
